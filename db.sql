@@ -72,6 +72,40 @@ CREATE TABLE boarding_passes
     foreign key (ticket_no, flight_id) references ticket_flights(ticket_no, flight_id)
 );
 
+insert into aircafts (aircraft_code, model, range)
+values ('737', '{}', 800);
+
+insert into aircafts (aircraft_code, model, range)
+values ('777', '{}', 200);
+
+insert into aircafts (aircraft_code, model, range)
+values ('320', '{}', 0);
+
+insert into aircafts (aircraft_code, model, range)
+values ('321', '{}', 0);
+
+insert into airports (airport_code, airport_name, city, coordinates_lon, coordinates_lat, timezone)
+values ('SVO', 'Sheremetego', 'MOSCOW', 55.5, 56.6, '+3');
+
+insert into airports (airport_code, airport_name, city, coordinates_lon, coordinates_lat, timezone)
+values ('DME', 'DOMODEDOVO', 'MOSCOW', 56.5, 56.6, '+3');
+
+insert into airports (airport_code, airport_name, city, coordinates_lon, coordinates_lat, timezone)
+values ('VKO', 'VNUKOVO', 'MOSCOW', 55.5, 54.6, '+3');
+
+insert into bookings (book_ref, book_date, total_amount)
+values ('qwerty', '2024-11-03 11:11:11', 1);
+
+insert into seats (aircraft_code, seat_no, fare_conditions)
+values ('737', '023A', 'just water');
+
+insert into tickets (ticket_no, book_ref, passenger_id, passenger_name, contact_data)
+values ('1234567890101', 'qwerty', '12345678901234567890', 'alex', '{}');
+
+insert into flights (flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival)
+values (1, 'AER821', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'DME', 'VKO', 'on air', '737', '2024-11-03 11:11:11', '2024-11-03 11:11:11');
+
+
 
 
 
