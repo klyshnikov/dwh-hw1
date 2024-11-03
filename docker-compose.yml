@@ -11,6 +11,8 @@ services:
       - ./init-script:/etc/postgresql/init-script
       - ./init-script/config/pg_hba.conf:/etc/postgresql/pg_hba.conf
       - ./init-script/config/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./init-script/master_init.sh:/etc/postgresql/init-script/master_init.sh
+      - ./init-script/master_db_init.sh:/etc/postgresql/init-script/master_db_init.sh
       #- ./db.sql:/docker-entrypoint-initdb.d/db.sql
     ports:
       - "127.0.0.1:5432:5432"

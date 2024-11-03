@@ -1,5 +1,3 @@
-
-
 CREATE Table bookings
 (
     book_ref char(6) PRIMARY KEY,
