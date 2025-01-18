@@ -1,6 +1,20 @@
 version: '3.9'
 
 services:
+  postgres_dwh:
+    container_name: postgres_dwh
+    image: postgres:14.5
+    hostname: postgres_dwh
+    restart: always
+    volumes: 
+      - ./dwh-init:/docker-entrypoint-initdb.d
+    ports:
+      - "127.0.0.1:5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
   postgres_master:
     container_name: postgres_master
     image: postgres:14.5

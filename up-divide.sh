@@ -31,6 +31,8 @@ sudo docker compose up -d debezium1
 sudo docker compose up -d debezium-ui1
 sudo docker compose up -d rest-proxy1
 
+sudo docker compose up -d postgres_dwh
+
 python3 create-config.py
 sudo curl -X POST --location "http://localhost:8083/connectors" -H "Content-Type: application/json" -H "Accept: application/json" -d @connector.json
 
