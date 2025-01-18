@@ -14,6 +14,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgres_master:
     container_name: postgres_master
@@ -171,3 +176,28 @@ services:
       KAFKA_REST_HOST_NAME: rest-proxy1
       KAFKA_REST_BOOTSTRAP_SERVERS: 'broker1:29092'
       KAFKA_REST_LISTENERS: 'http://0.0.0.0:8082'
+     
+  dmp_service:
+    build:
+      context: ./dmp_service
+    container_name: dmp_service
+    depends_on:
+      postgres_dwh:
+        condition: service_healthy
+      broker1:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER: "broker1:29092"
+      KAFKA_TOPIC: "postgres.public.aircafts"
+      KAFKA_GROUP: "dmp-group"
+      POSTGRES_HOST: "postgres_dwh"
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

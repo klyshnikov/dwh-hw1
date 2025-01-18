@@ -1,3 +1,8 @@
+--Test
+CREATE TABLE test (
+	id integer PRIMARY KEY
+);
+
 -- Booking
 CREATE TABLE hub_booking (
     hub_booking_key CHAR(32) PRIMARY KEY,
