@@ -1,64 +1,52 @@
 import psycopg2
 from kafka import KafkaConsumer
-import os
 import json
 
-# Kafka Consumer Configuration
-KAFKA_BROKER = os.getenv("KAFKA_BROKER", "broker1:29092")
-KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "postgres.public.aircafts")
-KAFKA_GROUP = os.getenv("KAFKA_GROUP", "dmp-group")
-
-# PostgreSQL Configuration
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "postgres_dwh")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)
-POSTGRES_DB = os.getenv("POSTGRES_DB", "postgres")
-POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
-
 def main():
-    # Set up Kafka Consumer
+
     consumer = KafkaConsumer(
-        KAFKA_TOPIC,
-        bootstrap_servers=[KAFKA_BROKER],
-        group_id=KAFKA_GROUP,
+        "postgres.public.aircafts",
+        bootstrap_servers=["broker1:29092"],
+        group_id="dmp-group",
         auto_offset_reset='earliest',
         enable_auto_commit=True,
         value_deserializer=lambda x: x.decode('utf-8')
     )
 
-    # Connect to PostgreSQL
-    conn = psycopg2.connect(
-        host=POSTGRES_HOST,
-        port=POSTGRES_PORT,
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD
+    pg_connector = psycopg2.connect(
+        host="postgres_dwh",
+        port=5432,
+        database="postgres",
+        user="postgres",
+        password="postgres"
     )
-    cursor = conn.cursor()
+    
+    cursor = pg_connector.cursor()
 
-    print("DMP service is running...")
+    print("consumer and postgres connector was created")
 
     try:
         for message in consumer:
-            # Parse message
             message_value = message.value
-            print(f"Received message: {message_value}")
+            print(f"message value: {message_value}")
+            
+            message_insert_values = json.loads(message_value)["payload"]["after"]
+            print(f"insert values: {message_insert_values}")
 
-            # Insert message into PostgreSQL
             try:
                 cursor.execute(
                     "INSERT INTO test (id) VALUES (1)"
                 )
-                conn.commit()
-                print("Message saved to database.")
+                pg_connector.commit()
             except Exception as e:
                 print(f"Database error: {e}")
-                conn.rollback()
-    except KeyboardInterrupt:
-        print("Shutting down DMP service...")
+                pg_connector.rollback()
+    except Exception as e:
+            print("Closing consumer due to error\n")
+            print(e)
     finally:
         consumer.close()
         cursor.close()
-        conn.close()
+        pg_connector.close()
 
 main()
