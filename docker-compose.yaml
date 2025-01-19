@@ -187,11 +187,6 @@ services:
       broker1:
         condition: service_healthy
     environment:
-      KAFKA_BROKER: "broker1:29092"
-      KAFKA_TOPIC: "postgres.public.aircafts"
-      KAFKA_GROUP: "dmp-group"
-      POSTGRES_HOST: "postgres_dwh"
-      POSTGRES_PORT: 5432
       POSTGRES_DB: "postgres"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
