@@ -8,8 +8,6 @@ COPY requirements.txt requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY dmp-aircraft.py dmp-aircraft.py
-COPY dmp-airports.py dmp-airports.py
+COPY dmp.py dmp.py
 
-CMD ["python3", "dmp-aircraft.py"]
-CMD ["python3", "dmp-airports.py"]
+CMD ["python3", "dmp.py"]
