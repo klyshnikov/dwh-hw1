@@ -94,3 +94,15 @@ sudo docker-compose logs broker1
 ![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/dmp-check-2.png)
 
 ![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/dmp-check-3.png)
+
+Аналогично можно посмотреть 
+
+```
+sudo docker-compose logs dmp_service
+```
+
+```
+sudo docker-compose logs postgres_dwh
+```
+
+Ошибок нет
