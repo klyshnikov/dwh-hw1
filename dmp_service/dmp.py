@@ -360,6 +360,282 @@ def dmp_flights():
         cursor.close()
         pg_connector.close()
     
+# Boardings
+def dmp_boardings():
+
+    consumer = KafkaConsumer(
+        "postgres.public.boarding_passes",
+        bootstrap_servers=["broker1:29092"],
+        group_id="dmp-group",
+        auto_offset_reset='earliest',
+        enable_auto_commit=True,
+        value_deserializer=lambda x: x.decode('utf-8')
+    )
+
+    pg_connector = psycopg2.connect(
+        host="postgres_dwh",
+        port=5432,
+        database="postgres",
+        user="postgres",
+        password="postgres"
+    )
+    
+    cursor = pg_connector.cursor()
+
+    print("consumer and postgres connector was created")
+
+    try:
+        for message in consumer:
+            message_value = message.value
+            print(f"message value: {message_value}")
+            
+            row = json.loads(message_value)["payload"]["after"]
+            print(f"insert values: {row}")
+
+            try:
+                print("log0")
+                h2 = row["boarding_no"]
+                h3 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                h4 = 'kafka'
+                h1 = str(hash(h2) + hash(h3) + hash(h4))
+            	
+                s1 = h1
+                s2 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                s3 = ""
+                s4 = "kafka"
+                s5 = row["boarding_no"]
+                s6 = row["seat_no"]
+                
+                l2 = h1
+                l3 = row["ticket_no"]
+                l4 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                l5 = "kafka"
+                l1 = str(hash(l2) + hash(l3) + hash(l4) + hash(l5))
+                
+                print("log1")
+                
+                sql_hub = """
+    				INSERT INTO hub_boarding (hub_boarding_key, hub_boarding_bk, hub_load_dts, hub_rec_src)
+    				VALUES (%s, %s, %s, %s)
+				"""
+				
+                cursor.execute(sql_hub, (h1, h2, h3, h4))
+                
+                print("log2")
+            	
+                sql_sat = """
+            		INSERT INTO sat_flight (hub_boarding_key, sat_load_dts, hash_diff, sat_rec_src, boarding_no, seat_no)
+            		VALUES (%s, %s, %s, %s, %s, %s)
+            	"""
+                cursor.execute(sql_sat, (s1, s2, s3, s4, str(s5), str(s6)))
+                
+                pg_connector.commit()
+                
+                sub_1 = """
+                    SELECT h.hub_ticket_key FROM hub_ticket as h WHERE h.hub_ticket_bk = %s
+                """
+                
+                print("log3")
+                
+                cursor.execute(sub_1, (l3))
+                
+                result = str(cursor.fetchone()[0])
+                
+                sql_lnk = """
+                    INSERT INTO lnk_boarding_matched_with_ticket (lnk_boarding_matched_with_ticket, hub_boarding_key, hub_ticket_key, lnk_load_dts, lnk_rec_src)
+                    VALUES (%s, %s, %s, %s, %s)
+                """
+                
+                print("log4")
+                
+                cursor.execute(sql_lnk, (l1, l2, result, l4, l5))
+                
+                pg_connector.commit()
+                
+                print("log5")
+                
+            except Exception as e:
+                print(f"Database error: {e}")
+                pg_connector.rollback()
+    except Exception as e:
+            print("Closing consumer due to error\n")
+            print(e)
+    finally:
+        consumer.close()
+        cursor.close()
+        pg_connector.close()
+        
+# Tickets
+def dmp_tickets():
+
+    consumer = KafkaConsumer(
+        "postgres.public.tickets",
+        bootstrap_servers=["broker1:29092"],
+        group_id="dmp-group",
+        auto_offset_reset='earliest',
+        enable_auto_commit=True,
+        value_deserializer=lambda x: x.decode('utf-8')
+    )
+
+    pg_connector = psycopg2.connect(
+        host="postgres_dwh",
+        port=5432,
+        database="postgres",
+        user="postgres",
+        password="postgres"
+    )
+    
+    cursor = pg_connector.cursor()
+
+    print("consumer and postgres connector was created")
+
+    try:
+        for message in consumer:
+            message_value = message.value
+            print(f"message value: {message_value}")
+            
+            row = json.loads(message_value)["payload"]["after"]
+            print(f"insert values: {row}")
+
+            try:
+                h2 = row["ticket_no"]
+                h3 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                h4 = 'kafka'
+                h1 = str(hash(h2) + hash(h3) + hash(h4))
+            	
+                s1 = h1
+                s2 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                s3 = ""
+                s4 = "kafka"
+                s5 = row["ticket_no"]
+                s6 = row["passenger_id"]
+                s7 = row["passenger_name"]
+                s8 = row["contact_data"]
+                
+                l2 = h1
+                l3 = row["book_ref"]
+                l4 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                l5 = "kafka"
+                l1 = str(hash(l2) + hash(l3) + hash(l4) + hash(l5))
+                
+                sql_hub = """
+    				INSERT INTO hub_ticket (hub_ticket_key, hub_ticket_bk, hub_load_dts, hub_rec_src)
+    				VALUES (%s, %s, %s, %s)
+				"""
+				
+                cursor.execute(sql_hub, (h1, h2, h3, h4))
+            	
+                sql_sat = """
+            		INSERT INTO sat_flight (hub_ticket_key, sat_load_dts, hash_diff, sat_rec_src, ticket_no, passenger_id, passenger_name, contact_data)
+            		VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            	"""
+                cursor.execute(sql_sat, (s1, s2, s3, s4, s5, s6, s7, s8))
+                
+                pg_connector.commit()
+                
+                sub_1 = """
+                    SELECT h.hub_booking_key FROM hub_booking as h WHERE h.hub_booking_bk = %s
+                """
+                
+                cursor.execute(sub_1, (l3))
+                
+                result = str(cursor.fetchone()[0])
+                
+                sql_lnk = """
+                    INSERT INTO lnk_ticket_include_booking (lnk_ticket_include_booking_key, hub_ticket_key, hub_booking_key, lnk_load_dts, lnk_rec_src)
+                    VALUES (%s, %s, %s, %s, %s)
+                """
+                
+                print("log4")
+                
+                cursor.execute(sql_lnk, (l1, l2, result, l4, l5))
+                
+                pg_connector.commit()
+                
+                print("log5")
+                
+            except Exception as e:
+                print(f"Database error: {e}")
+                pg_connector.rollback()
+    except Exception as e:
+            print("Closing consumer due to error\n")
+            print(e)
+    finally:
+        consumer.close()
+        cursor.close()
+        pg_connector.close()
+
+# Booking
+def dmp_booking():
+
+    consumer = KafkaConsumer(
+        "postgres.public.bookings",
+        bootstrap_servers=["broker1:29092"],
+        group_id="dmp-group",
+        auto_offset_reset='earliest',
+        enable_auto_commit=True,
+        value_deserializer=lambda x: x.decode('utf-8')
+    )
+
+    pg_connector = psycopg2.connect(
+        host="postgres_dwh",
+        port=5432,
+        database="postgres",
+        user="postgres",
+        password="postgres"
+    )
+    
+    cursor = pg_connector.cursor()
+
+    print("consumer and postgres connector was created")
+
+    try:
+        for message in consumer:
+            message_value = message.value
+            print(f"message value: {message_value}")
+            
+            row = json.loads(message_value)["payload"]["after"]
+            print(f"insert values: {row}")
+
+            try:
+                h2 = row["book_ref"]
+                h3 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                h4 = 'kafka'
+                h1 = str(hash(h2) + hash(h3) + hash(h4))
+            	
+                s1 = h1
+                s2 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                s3 = ""
+                s4 = "kafka"
+                s5 = row["book_date"]
+                s6 = row["total_amount"]
+                
+                sql_hub = """
+    				INSERT INTO hub_ticket (hub_ticket_key, hub_ticket_bk, hub_load_dts, hub_rec_src)
+    				VALUES (%s, %s, %s, %s)
+				"""
+				
+                cursor.execute(sql_hub, (h1, h2, h3, h4))
+            	
+                sql_sat = """
+            		INSERT INTO sat_flight (hub_ticket_key, sat_load_dts, hash_diff, sat_rec_src, ticket_no, passenger_id, passenger_name, contact_data)
+            		VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            	"""
+                cursor.execute(sql_sat, (s1, s2, s3, s4, s5, s6, s7, s8))
+                
+                pg_connector.commit()
+                
+            except Exception as e:
+                print(f"Database error: {e}")
+                pg_connector.rollback()
+    except Exception as e:
+            print("Closing consumer due to error\n")
+            print(e)
+    finally:
+        consumer.close()
+        cursor.close()
+        pg_connector.close()
+
 
 def main():
     threads = []
@@ -379,6 +655,17 @@ def main():
     dmp_flights_thread = threading.Thread(target=dmp_flights)
     threads.append(dmp_flights_thread)
     dmp_flights_thread.start()
-
+    
+    dmp_boardings_thread = threading.Thread(target=dmp_boardings)
+    threads.append(dmp_boardings_thread)
+    dmp_boardings_thread.start()
+    
+    dmp_tickets_thread = threading.Thread(target=dmp_tickets)
+    threads.append(dmp_tickets_thread)
+    dmp_tickets_thread.start()
+    
+    dmp_booking_thread = threading.Thread(target=dmp_booking)
+    threads.append(dmp_booking_thread)
+    dmp_booking_thread.start()
 
 main()
