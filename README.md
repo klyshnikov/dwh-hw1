@@ -73,11 +73,11 @@ Dockerfile: https://github.com/klyshnikov/dwh-hw1/blob/main/dmp_service/Dockerfi
 
 ### Проверка работы debezium
 
-Для этого есть файл consumer.py
+Для этого есть файл consumer.py 
 
 Который логирует сообщения из кафки.
 
-![alt text](https://github.com/klyshnikov/dwh-hw1/blob/main/result.png)
+![alt text](https://github.com/klyshnikov/dwh-hw1/blob/main/debezuim-check.png)
 
 Можно конечно посмотреть логи кафки
 ```
