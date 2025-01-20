@@ -73,7 +73,7 @@ Dockerfile: https://github.com/klyshnikov/dwh-hw1/blob/main/dmp_service/Dockerfi
 
 ### Проверка работы debezium
 
-Для этого есть файл consumer.py ![all_text](https://github.com/klyshnikov/dwh-hw1/blob/main/consumer.py)
+Для этого есть файл consumer.py ![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/consumer.py)
 
 Который логирует сообщения из кафки.
 
@@ -84,5 +84,9 @@ Dockerfile: https://github.com/klyshnikov/dwh-hw1/blob/main/dmp_service/Dockerfi
 sudo docker-compose logs broker1
 ```
 Но их слишком много.
+
+### Проверка работы dmp
+
+Заметим, что финальная dwh заполняется значениями
 
 
