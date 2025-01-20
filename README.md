@@ -89,4 +89,8 @@ sudo docker-compose logs broker1
 
 Заметим, что финальная dwh заполняется значениями
 
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/dmp-check-1.png)
 
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/dmp-check-2.png)
+
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/dmp-check-3.png)
