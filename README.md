@@ -41,7 +41,7 @@ sh ./up-divide.sh
 
 Схема описана в файле https://github.com/klyshnikov/dwh-hw1/blob/main/dmp_service/dbdiagram.pdf
 
-
+Скрипт заполнения (ddl) 
 
 ## Порядок работы программы:
 1. Останавливаем все контейнеры, чтобы начать работать с нуля.
