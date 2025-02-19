@@ -39,6 +39,8 @@ sudo curl -X POST --location "http://localhost:8083/connectors" -H "Content-Type
 
 python3 consumer.py
 
+sudo echo hw3
+
 
 
 
