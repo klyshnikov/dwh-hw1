@@ -33,17 +33,17 @@ def copy_data():
     target_cursor = target_conn.cursor()
     
     # Создаем таблицы в схеме public
-    source_cursor.execute("CREATE TABLE IF NOT EXISTS source_table (id integer)")
-    target_cursor.execute("CREATE TABLE IF NOT EXISTS target_table (id integer)")
-    source_cursor.execute("INSERT INTO source_table (id) VALUES (1)")
+    #source_cursor.execute("CREATE TABLE IF NOT EXISTS source_table (id integer)")
+    target_cursor.execute("CREATE TABLE IF NOT EXISTS flights (flight_id serial PRIMARY KEY, flight_no char(6), scheduled_departure timestamptz, scheduled_arrival timestamptz, departure_airport char(3) references airports(airport_code), arrival_airport char(3) references airports(airport_code), status varchar(20), aircraft_code varchar(3) references aircafts(aircraft_code), actual_departure timestamptz, actual_arrival timestamptz)")
+    #source_cursor.execute("INSERT INTO source_table (id) VALUES (1)")
 
     # Пример SQL-запроса для выборки данных из источника
-    source_cursor.execute("SELECT * FROM source_table")
+    source_cursor.execute("SELECT * FROM flights(flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival)")
     rows = source_cursor.fetchall()
 
     # Вставляем данные в целевую таблицу
     for row in rows:
-        target_cursor.execute("INSERT INTO target_table VALUES (%s)", row)
+        target_cursor.execute("INSERT INTO flights VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", row)
 
     # Коммитим изменения
     source_conn.commit()

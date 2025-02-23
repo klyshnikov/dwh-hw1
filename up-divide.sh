@@ -35,7 +35,7 @@ sudo docker compose up -d postgres_dwh
 sudo docker compose up --build -d dmp_service
 
 # Запуск баз данных
-sudo docker-compose up -d postgres_1
+# sudo docker-compose up -d postgres_1
 sudo docker-compose up -d postgres_2
 sudo docker-compose up -d postgres
 
@@ -64,7 +64,7 @@ sudo curl -X POST --location "http://localhost:8083/connectors" -H "Content-Type
 sudo docker-compose run --rm airflow-cli bash -c "
 airflow connections add source_db \
     --conn-type postgres \
-    --conn-host postgres_1 \
+    --conn-host postgres_master \
     --conn-login postgres \
     --conn-password postgres \
     --conn-port 5432
