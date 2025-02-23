@@ -67,7 +67,6 @@ airflow connections add source_db \
     --conn-host postgres_1 \
     --conn-login postgres \
     --conn-password postgres \
-    --conn-schema public \
     --conn-port 5432
 
 airflow connections add target_db \
@@ -75,7 +74,6 @@ airflow connections add target_db \
     --conn-host postgres_2 \
     --conn-login postgres \
     --conn-password postgres \
-    --conn-schema public \
     --conn-port 5432
 
 # Проверка добавленных подключений
