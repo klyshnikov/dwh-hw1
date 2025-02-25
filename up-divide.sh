@@ -34,8 +34,42 @@ sudo docker compose up -d rest-proxy1
 sudo docker compose up -d postgres_dwh
 sudo docker compose up --build -d dmp_service
 
+# Запуск airflow контейнеров
+sudo docker-compose up -d postgres_2
+sudo docker-compose up -d postgres
+sudo docker-compose up -d redis
+sudo docker-compose up -d airflow-init
+sudo docker-compose up -d airflow-webserver
+sudo docker-compose up -d airflow-scheduler
+sudo docker-compose up -d airflow-worker
+sudo docker-compose up -d airflow-triggerer
+sudo docker-compose up -d flower
+
+echo "Ожидание инициализации контейнеров (30 сек.) ..."
+sleep 30
+
 python3 create-config.py
 sudo curl -X POST --location "http://localhost:8083/connectors" -H "Content-Type: application/json" -H "Accept: application/json" -d @connector.json
+
+# Добавление подключений через Airflow CLI
+sudo docker-compose run --rm airflow-cli bash -c "
+airflow connections add source_db \
+    --conn-type postgres \
+    --conn-host postgres_master \
+    --conn-login postgres \
+    --conn-password postgres \
+    --conn-port 5432
+
+airflow connections add target_db \
+    --conn-type postgres \
+    --conn-host postgres_2 \
+    --conn-login postgres \
+    --conn-password postgres \
+    --conn-port 5432
+
+echo 'Подключения'
+airflow connections list
+"
 
 python3 consumer.py
 
