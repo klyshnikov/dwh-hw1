@@ -69,7 +69,41 @@ Dockerfile: https://github.com/klyshnikov/dwh-hw1/blob/main/dmp_service/Dockerfi
 ### Проверка работы реплики
 Проверим, что репликация работает. Через любую IDE можно подключиться к 2 контейнерам и убедиться, что базы полностью совпадают
 
-![alt text](https://github.com/klyshnikov/dwh-hw1/blob/main/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202024-11-04%2000-57-36.png)
+![alt text](https://github.com/klyshnikov/dwh-hw1/blob/main/result.png)
 
 ### Проверка работы debezium
+
+Для этого есть файл consumer.py ![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/consumer.py)
+
+Который логирует сообщения из кафки.
+
+![alt text](https://github.com/klyshnikov/dwh-hw1/blob/main/debezuim-check.png)
+
+Можно конечно посмотреть логи кафки
+```
+sudo docker-compose logs broker1
+```
+Но их слишком много.
+
+### Проверка работы dmp
+
+Заметим, что финальная dwh заполняется значениями
+
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/dmp-check-1.png)
+
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/dmp-check-2.png)
+
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/main/dmp-check-3.png)
+
+Аналогично можно посмотреть 
+
+```
+sudo docker-compose logs dmp_service
+```
+
+```
+sudo docker-compose logs postgres_dwh
+```
+
+Ошибок нет
 
