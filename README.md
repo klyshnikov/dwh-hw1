@@ -107,3 +107,20 @@ sudo docker-compose logs postgres_dwh
 
 Ошибок нет
 
+### Airflow
+В дополнение к предыдущему заданию в docker-compose.yaml были добавлены контейнеры для airflow. 
+
+В up-divide.sh (скрипт для запуска) добавил поднятие контейнеров airflow и добавление подключений к двум БД
+
+Target - это postgres_maser. Souce - это postgres_2 (port 5436). В postgres_2 лежит таблица presentation к первому заданию.
+
+Даг simple_dag находится в dags/simple_dag.py. Он выкачивает данные из мастера и складывает в presentation. 
+
+Вот так он работает:
+
+![all text]()
+
+![all  text]()
+
+![all text]()
+
