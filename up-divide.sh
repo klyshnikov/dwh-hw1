@@ -34,27 +34,18 @@ sudo docker compose up -d rest-proxy1
 sudo docker compose up -d postgres_dwh
 sudo docker compose up --build -d dmp_service
 
-# Запуск баз данных
-# sudo docker-compose up -d postgres_1
+# Запуск airflow контейнеров
 sudo docker-compose up -d postgres_2
 sudo docker-compose up -d postgres
-
-# Запуск Redis
 sudo docker-compose up -d redis
-
-# Инициализация Airflow
 sudo docker-compose up -d airflow-init
-
-# Запуск основных сервисов Airflow
 sudo docker-compose up -d airflow-webserver
 sudo docker-compose up -d airflow-scheduler
 sudo docker-compose up -d airflow-worker
 sudo docker-compose up -d airflow-triggerer
-
-# Запуск Flower (опционально)
 sudo docker-compose up -d flower
 
-echo "Ожидание инициализации контейнеров..."
+echo "Ожидание инициализации контейнеров (30 сек.) ..."
 sleep 30
 
 python3 create-config.py
@@ -76,8 +67,7 @@ airflow connections add target_db \
     --conn-password postgres \
     --conn-port 5432
 
-# Проверка добавленных подключений
-echo 'Список подключений:'
+echo 'Подключения'
 airflow connections list
 "
 

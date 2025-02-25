@@ -3,64 +3,80 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from datetime import datetime, timedelta
 
-# Определяем аргументы DAG
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2023, 10, 1),
+    'start_date': datetime(2024, 1, 1),
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
 }
 
-# Создаем DAG
 dag = DAG(
-    'copy_data_between_dbs',
+    'presentation_copy_data',
     default_args=default_args,
-    description='DAG для копирования данных между двумя базами данных',
+    description='Собирает витрину из postgres_master в postgres_2 схеме presentation',
     schedule_interval=timedelta(days=1),
 )
 
-# Функция для копирования данных
-def copy_data():
-    # Инициализируем подключение к источнику
+def add_presentation_data():
     source_hook = PostgresHook(postgres_conn_id='source_db')
     source_conn = source_hook.get_conn()
     source_cursor = source_conn.cursor()
 
-    # Инициализируем подключение к целевой базе данных
     target_hook = PostgresHook(postgres_conn_id='target_db')
     target_conn = target_hook.get_conn()
     target_cursor = target_conn.cursor()
     
-    # Создаем таблицы в схеме public
-    #source_cursor.execute("CREATE TABLE IF NOT EXISTS source_table (id integer)")
-    target_cursor.execute("CREATE TABLE IF NOT EXISTS flights (flight_id serial PRIMARY KEY, flight_no char(6), scheduled_departure timestamptz, scheduled_arrival timestamptz, departure_airport char(3) references airports(airport_code), arrival_airport char(3) references airports(airport_code), status varchar(20), aircraft_code varchar(3) references aircafts(aircraft_code), actual_departure timestamptz, actual_arrival timestamptz)")
-    #source_cursor.execute("INSERT INTO source_table (id) VALUES (1)")
+    target_cursor.execute("\
+    CREATE TABLE IF NOT EXISTS presentation ( \
+    	created_at timestamptz,\
+    	passenger_id varchar(20),\
+    	passenger_name text,\
+    	flight_number int,\
+    	purchase_sum int,\
+    	home_airport text ) ")
 
-    # Пример SQL-запроса для выборки данных из источника
-    source_cursor.execute("SELECT * FROM flights(flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival)")
+    query_presentation = "\
+    SELECT DISTINCT ON (t.passenger_id) \
+    	NOW() as created_at, \
+    	t.passenger_id as passenger_id, \
+    	t.passenger_name as passenger_name, \
+    	COUNT(DISTINCT f.flight_id) AS flight_number, \
+    	SUM(b.total_amount) AS purchase_sum, \
+    	a.airport_name as home_airport \
+	FROM tickets t \
+	JOIN bookings b ON t.book_ref = b.book_ref \
+	JOIN ticket_flights tf ON tf.ticket_no = t.ticket_no \
+	JOIN flights f ON f.flight_id = tf.flight_id \
+	JOIN airports a ON a.airport_code = f.departure_airport OR a.airport_code = f.arrival_airport \
+	GROUP BY \
+    	t.passenger_id, \
+    	t.passenger_name, \
+    	a.airport_name \
+	ORDER BY \
+    	t.passenger_id, \
+    COUNT(DISTINCT f.flight_id) DESC;"
+    
+    source_cursor.execute(query_presentation)
     rows = source_cursor.fetchall()
 
-    # Вставляем данные в целевую таблицу
     for row in rows:
-        target_cursor.execute("INSERT INTO flights VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", row)
+        target_cursor.execute("INSERT INTO presentation VALUES (%s, %s, %s, %s, %s, %s)", row)
 
-    # Коммитим изменения
     source_conn.commit()
     target_conn.commit()
 
-    # Закрываем подключения
     source_cursor.close()
     source_conn.close()
     target_cursor.close()
     target_conn.close()
 
-# Создаем задачу в DAG
-copy_data_task = PythonOperator(
-    task_id='copy_data',
-    python_callable=copy_data,
+presentation_task = PythonOperator(
+    task_id='add_presentation_data',
+    python_callable=add_presentation_data,
     dag=dag,
 )
 
-# Определяем порядок выполнения задач
-copy_data_task
+# Тут будет всего одна операция - сбор данных из мастера и созданние данных для витрины
+# Т.к я не понял, как даги могут общаться между собой или перекидывать данные
+presentation_task

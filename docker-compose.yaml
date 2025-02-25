@@ -1,6 +1,6 @@
 version: '3.9'
 
-# ===== This is fow airflow ========
+# ===== This is for airflow ========
 x-airflow-common:
   &airflow-common
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
@@ -431,10 +431,7 @@ services:
     depends_on:
       - postgres_master
       - postgres_2
-
-  # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
-  # or by explicitly targeted on the command line e.g. docker-compose up flower.
-  # See: https://docs.docker.com/compose/profiles/
+      
   flower:
     <<: *airflow-common
     command: celery flower
