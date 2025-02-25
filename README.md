@@ -118,9 +118,12 @@ Target - это postgres_maser. Souce - это postgres_2 (port 5436). В postgr
 
 Вот так он работает:
 
-![all text]()
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/airflow_1.png)
 
-![all  text]()
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/airflow_2.png)
 
-![all text]()
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/airflow_3.png)
+
+Тут на самом деле повторяются 2 строчки, просто airflow для удобства отрабатывает раз в 5 минут. Тут видно, что Гендальф летал 2 раза на сумму 1100, а Саурон летал 3 раза на сумму 479.
+Их самые частые аэропорты - Домодедово и Внуково
 
