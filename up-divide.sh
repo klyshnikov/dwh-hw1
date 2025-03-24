@@ -45,6 +45,9 @@ sudo docker-compose up -d airflow-worker
 sudo docker-compose up -d airflow-triggerer
 sudo docker-compose up -d flower
 
+# Запуск grafana
+sudo docker-compose up -d grafana
+
 echo "Ожидание инициализации контейнеров (30 сек.) ..."
 sleep 30
 

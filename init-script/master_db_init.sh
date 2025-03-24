@@ -176,19 +176,19 @@ values ('321', '023D', 'just water');
 
 
 insert into flights (flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival)
-values (1, 'AER821', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'DME', 'VKO', 'on air', '737', '2024-11-03 11:11:11', '2024-11-03 11:11:11');
+values (1, 'AER821', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'DME', 'VKO', 'on air', '737', '2024-11-03 11:11:11', '2025-03-03 11:11:11');
 
 insert into flights (flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival)
-values (2, 'AER822', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'DME', 'SVO', 'on air', '777', '2024-11-03 11:11:11', '2024-11-03 11:11:11');
+values (2, 'AER822', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'DME', 'SVO', 'on air', '777', '2024-11-03 11:11:11', '2025-03-05 11:11:11');
 
 insert into flights (flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival)
-values (3, 'AER823', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'SVO', 'VKO', 'on air', '737', '2024-11-03 11:11:11', '2024-11-03 11:11:11');
+values (3, 'AER823', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'SVO', 'VKO', 'on air', '737', '2024-11-03 11:11:11', '2025-03-10 11:11:11');
 
 insert into flights (flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival)
-values (4, 'AER824', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'VKO', 'DME', 'on air', '321', '2024-11-03 11:11:11', '2024-11-03 11:11:11');
+values (4, 'AER824', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'VKO', 'DME', 'on air', '321', '2024-11-03 11:11:11', '2025-03-16 11:11:11');
 
 insert into flights (flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival)
-values (5, 'AER825', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'DME', 'VKO', 'on air', '320', '2024-11-03 11:11:11', '2024-11-03 11:11:11');
+values (5, 'AER825', '2024-11-03 11:11:11', '2024-11-03 11:11:11', 'DME', 'VKO', 'on air', '320', '2024-11-03 11:11:11', '2025-03-19 11:11:11');
 
 
 
