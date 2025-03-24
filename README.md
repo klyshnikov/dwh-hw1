@@ -127,3 +127,25 @@ Target - это postgres_maser. Souce - это postgres_2 (port 5436). В postgr
 Тут на самом деле повторяются 2 строчки, просто airflow для удобства отрабатывает раз в 5 минут. Тут видно, что Гендальф летал 2 раза на сумму 1100, а Саурон летал 3 раза на сумму 479.
 Их самые частые аэропорты - Домодедово и Внуково
 
+### ДЗ 4
+
+В этом ДЗ я поднял графану в дополнение ко всем сервисам. Данные она берет и зависит от postgres_slave (что логично, ведь тут мы выполняем read-only операции). 
+
+Коннект ощуществляется следующим образом:
+```
+host: postgres_slave:5432
+database: postgres
+user: postgres
+password: postgres
+```
+
+#### Дашборд 1:
+1. Всего активных аэропортов:
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana1.png)
+2. Всего активных аэропортов за последние 30 дней по дням
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana2.png)
+3. pie chart - кол-во перелетов по аэропортам
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana3.png)
+4. pie chart - кол-во пассажиров по аэропортам
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana4.png)
+   
