@@ -140,6 +140,10 @@ user: postgres
 password: postgres
 ```
 
+Видео:
+
+ - 1 дашборд https://disk.yandex.ru/d/7I_H0qUo45rO1Q
+
 #### Дашборд 1:
 1. Всего активных аэропортов:
 ![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana1.png)
