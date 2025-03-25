@@ -153,4 +153,16 @@ password: postgres
 ![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana3.png)
 4. pie chart - кол-во пассажиров по аэропортам
 ![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana4.png)
+
+#### Дашборд 2:
+1. Всего уникальных пасажиров
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana5.png)
+2. Средний чек
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana6.png)
+3. Среднее кол-во полетов на пассажира
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana7.png)
+4. Динамика кол-ва уникальных пассажиров по дням
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana8.png)
+5. Динамика совокупной выручки по дням
+![all text](https://github.com/klyshnikov/dwh-hw1/blob/hw3/grafana9.png)
    
