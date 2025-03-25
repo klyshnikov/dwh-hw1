@@ -142,7 +142,7 @@ password: postgres
 
 Видео:
 
- - 1 дашборд https://disk.yandex.ru/d/7I_H0qUo45rO1Q
+ -  https://disk.yandex.ru/d/7I_H0qUo45rO1Q
 
 #### Дашборд 1:
 1. Всего активных аэропортов:
